@@ -1,10 +1,14 @@
 const os = require('os')
 const crypto = require('crypto')
+const path = require('path')
+const extensionPath = path.join(process.cwd(), "extensions", "capsolver");
+
 
 // medidas de precaução de detecção de automação.
 
 module.exports = function launchConfig() {
   return {
+  
     headless: false,
 
     // Simula comportamento mais humano
@@ -17,6 +21,8 @@ module.exports = function launchConfig() {
     ],
 
     args: [
+     `--disable-extensions-except=${extensionPath}`,
+      `--load-extension=${path}`,
       '--no-sandbox',
       '--disable-setuid-sandbox',
 
