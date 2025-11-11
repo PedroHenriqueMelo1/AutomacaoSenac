@@ -127,6 +127,7 @@ async CheckState(selector) {
   }, {}, selector);
 }
 
+
 async ResolveCaptcha(selectorValue1, selectorValue2, selectorTargetInput) {
   try {
     // garantir que todos seletores existam

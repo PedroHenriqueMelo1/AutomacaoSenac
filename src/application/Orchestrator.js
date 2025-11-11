@@ -1,17 +1,18 @@
 const sleep = require('./helper')
 class Orchestrator {
-  constructor(browserAdapter) {
+  constructor(browserAdapter, firstTime) {
    this.browserAdapter = browserAdapter
+   this.firstTime = null
   }
 
-  async Cluster() {
-     await this.browserAdapter.AbrirNavegador()
+  async Cluster(DTO) {
+    await this.browserAdapter.AbrirNavegador()
+    
+    await this.browserAdapter.IrParaPagina('https://empreenda.digito1.com.br/VotoPopular/Voto/777')
 
-    await this.browserAdapter.IrParaPagina('https://empreenda.digito1.com.br/VotoPopular/Voto/2341')
+    await this.browserAdapter.ClickSelector('a[onclick="votacao(777,\'Ensino Médio Técnico\',\'Lebrai\')"]')
 
-    await this.browserAdapter.ClickSelector('a[onclick="votacao(2341,\'Graduação\',\'CicloVivo\')"]')
-
-   await this.browserAdapter.PreencherInput('#Email', "pha.melo16@gmail.com")
+   await this.browserAdapter.PreencherInput('#Email',`${DTO.email}`)
    
    await this.browserAdapter.PreencherCheckBox('#chkAceite')
 
@@ -27,6 +28,13 @@ class Orchestrator {
     await sleep(2000)
 
    await this.browserAdapter.ClickSelector("#btEnviar")
+
+   await sleep(2500)
+
+
+   await this.browserAdapter.FecharNavegador()
+
+   return
   }
 }
 

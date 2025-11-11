@@ -42,12 +42,17 @@ async PageQualquerClick() {
   await this.BrowserClient.clickAny()
 }
 
-async VerificarRedeParaConcluir(selector) {
+async VerificarRedeParaConcluir() {
 
   await this.BrowserClient.CheckNetworkRequests()
 
 
 }
 
+
+async FecharNavegador() {
+
+  await this.BrowserClient.close()
+}
 }
 

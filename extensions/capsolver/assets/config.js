@@ -38,15 +38,15 @@ export const defaultConfig = {
   hCaptchaMode: 'click',
 
   // Delay before solving captcha
-  reCaptchaDelayTime: 0,
+  reCaptchaDelayTime: 200,
   hCaptchaDelayTime: 0,
   textCaptchaDelayTime: 0,
   awsDelayTime: 0,
 
   // Number of repeated solutions after an error
-  reCaptchaRepeatTimes: 10,
-  reCaptcha3RepeatTimes: 10,
-  hCaptchaRepeatTimes: 10,
+  reCaptchaRepeatTimes: 20,
+  reCaptcha3RepeatTimes: 20,
+  hCaptchaRepeatTimes: 20,
   funCaptchaRepeatTimes: 10,
   textCaptchaRepeatTimes: 10,
   awsRepeatTimes: 10,
