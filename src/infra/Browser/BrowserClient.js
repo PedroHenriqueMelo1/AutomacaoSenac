@@ -13,7 +13,6 @@ module.exports = class BrowserClient {
     try {
       puppeteer.use(StealthPlugin())
       this.browser = await puppeteer.launch(this.configs)
-      this.page = await this.browser.newPage()
       console.log('Navegador aberto com sucesso.')
     } catch (e) {
       throw new Error("INFRA_ERROR: Failed to launch browser → " + e.message)
@@ -24,6 +23,8 @@ module.exports = class BrowserClient {
 
   async newPage() {
     try {
+     if(this.page) await this.page.close()
+
       this.page = await this.browser.newPage()
       return this.page
     } catch (e) {
@@ -31,31 +32,32 @@ module.exports = class BrowserClient {
     }
   }
 
-  async clickAny() {
-
-     const width =  await this.page.evaluate(() => window.innerWidth)
-  const height = await this.page.evaluate(() => window.innerHeight)
-
-  const x = Math.floor(Math.random() * width)
-  const y = Math.floor(Math.random() * height)
-
-  await this.page.mouse.click(x, y)
-  }
-
+ 
   async goto(url) {
     try {
-      await this.page.goto(url, { waitUntil: 'networkidle2' })
+      await this.page.goto(url, { waitUntil: 'networkidle0' })
     } catch (e) {
       throw new Error("INFRA_ERROR: Failed to navigate → " + e.message)
     }
   }
 
-  async ClickElemment(selector) {
+  async ClickElemmentLocator(selector) {
   try {
-    await this.page.waitForSelector(selector, { timeout: 8000 })
-    await this.page.click(selector)
+   await this.page.locator(selector).click()
   } catch (e) {
     throw new Error("INFRA_ERROR: Failed to click → " + e.message)
+  }
+}
+
+async ClickElemment(selector) {
+
+  try {
+  
+    await this.page.click(selector)
+
+  }
+  catch(e) {
+    throw new Error("INFRA_ERROR Failed to click -> " + e.message)
   }
 }
 
@@ -78,7 +80,7 @@ async CheckNetworkRequests() {
 
     const handler = (req) => {
       if (req.url().includes('clr')) {
-        this.page.off('request', handler); // remover listener ✅
+        this.page.off('request', handler);
         resolve(true);
       }
     };
@@ -169,9 +171,42 @@ async ResolveCaptcha(selectorValue1, selectorValue2, selectorTargetInput) {
   }
 }
 
+async verifyURL() {
 
-  async close() {
-    if (!this.browser) return
-    await this.browser.close()
+  try {
+    const URL = await this.browser.URL()
+    console.log(URL)
   }
+  catch(err) {
+
+  }
+}
+
+ async close() {
+  if (!this.browser) return;
+
+  try {
+    // Fecha todas as páginas para evitar deadlock
+    const pages = await this.browser.pages();
+    for (const p of pages) {
+      try {
+        await p.close({ runBeforeUnload: false });
+      } catch {}
+    }
+  } catch {}
+
+  try {
+    // Tenta fechar o navegador normalmente
+    await this.browser.close({ runBeforeUnload: false });
+  } catch {
+    // Se travar, mata o processo real do Chrome
+    try {
+      const proc = this.browser.process();
+      if (proc) proc.kill('SIGKILL');
+    } catch {}
+  }
+
+  this.browser = null;
+}
+
 }

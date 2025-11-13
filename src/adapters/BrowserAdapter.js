@@ -13,11 +13,16 @@ module.exports = class BrowserAdapter {
 }
 
 async IrParaPagina(URL) {
-
+  await this.BrowserClient.newPage()
   await this.BrowserClient.goto(URL)
 }
 
-async ClickSelector(seletor) {
+async ClickSelectorLocator(seletor) {
+
+  await this.BrowserClient.ClickElemmentLocator(seletor)
+}
+
+async ClickElemment(seletor) {
 
   await this.BrowserClient.ClickElemment(seletor)
 }
@@ -49,6 +54,9 @@ async VerificarRedeParaConcluir() {
 
 }
 
+async VerificarURL() {
+  await this.BrowserClient.verifyURL
+}
 
 async FecharNavegador() {
 

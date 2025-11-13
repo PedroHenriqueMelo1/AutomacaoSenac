@@ -10,6 +10,7 @@ async function IndexApp() {
     
   } catch (err) {
     console.error("Erro no ciclo:", err.message);
+
     // continua o loop mesmo assim
     await XLSX.GravarLog('Erro', false)
   }

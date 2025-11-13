@@ -9,7 +9,6 @@ class EmailAdapter {
   async PegarEmail() {
   const Email = await  this.emailclient.getRandomEmail()
 
-  console.log(`Corpo do email ${Email}`)
   return Email
   }
 

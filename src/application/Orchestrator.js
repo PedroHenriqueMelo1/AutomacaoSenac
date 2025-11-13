@@ -6,33 +6,35 @@ class Orchestrator {
   }
 
   async Cluster(DTO) {
-    await this.browserAdapter.AbrirNavegador()
+    if(!this.firstTime) {
+          await this.browserAdapter.AbrirNavegador()
+        console.log(`Abrindo navegador 1°VEZ`)
+        this.firstTime = 1
+    }
+  
     
     await this.browserAdapter.IrParaPagina('https://empreenda.digito1.com.br/VotoPopular/Voto/777')
 
-    await this.browserAdapter.ClickSelector('a[onclick="votacao(777,\'Ensino Médio Técnico\',\'Lebrai\')"]')
+    await this.browserAdapter.ClickSelectorLocator('a[onclick="votacao(777,\'Ensino Médio Técnico\',\'Lebrai\')"]')
 
    await this.browserAdapter.PreencherInput('#Email',`${DTO.email}`)
-   
-   await this.browserAdapter.PreencherCheckBox('#chkAceite')
-
+    
    await this.browserAdapter.ResolverCaptch('#valor1', '#valor2', "#totalvalores")
- 
-    await sleep(3000)
+  
 
-    await this.browserAdapter.ClickSelector("#btEnviar")
+   await sleep(7500)
 
- 
+ try {
     await this.browserAdapter.VerificarRedeParaConcluir()
   
-    await sleep(2000)
-
-   await this.browserAdapter.ClickSelector("#btEnviar")
-
-   await sleep(2500)
+    
+   await this.browserAdapter.ClickElemment("#btEnviar")
 
 
-   await this.browserAdapter.FecharNavegador()
+ }
+ catch(err) {
+  console.log(err)
+ }
 
    return
   }
